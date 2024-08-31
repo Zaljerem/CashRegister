@@ -93,7 +93,7 @@ public class Building_CashRegister : Building_TableTop, IHaulDestination, IThing
 
     public bool IsAvailable(Pawn p) =>
         // On this map and not resting or down
-        p?.MapHeld == Map && !p.Downed && (!Settings.inactiveIfEveryoneIsSleeping || !IsSleeping(p));
+        p?.MapHeld == Map && !p.Downed && (!ModSettings_CashRegister.inactiveIfEveryoneIsSleeping || !IsSleeping(p));
 
     private static bool IsSleeping(Pawn pawn) => !pawn.health.capacities.CanBeAwake || pawn.CurJobDef == JobDefOf.LayDown || pawn.CurJobDef == JobDefOf.LayDownResting;
 
