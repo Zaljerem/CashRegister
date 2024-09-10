@@ -1,16 +1,36 @@
-using HugsLib.Settings;
+using UnityEngine;
 using Verse;
 
 namespace CashRegister
 {
-	internal class Settings
-	{
-		public static SettingHandle<bool> inactiveIfEveryoneIsSleeping;
-		
-		public Settings(ModSettingsPack settings)
-		{
-			inactiveIfEveryoneIsSleeping = settings.GetHandle("inactiveIfEveryoneIsSleeping", "InactiveIfEveryoneIsSleeping".Translate(), "InactiveIfEveryoneIsSleepingDesc".Translate(), true);
-		}
+	public class ModSettings_CashRegister : ModSettings
+    {
+        
+        public override void ExposeData()
+        {
+            Scribe_Values.Look<bool>(ref inactiveIfEveryoneIsSleeping, "inactiveIfEveryoneIsSleeping", true);
+            base.ExposeData();
+        }
+		public static bool
+			inactiveIfEveryoneIsSleeping = true;
+
+        private Vector2 scrollPosition;
+
+        public void DoSettingsWindowContents(Rect inRect)
+        {
+            Rect rect = new Rect(inRect.x, inRect.y, inRect.width - 20f, inRect.height);
+            float contentHeight = 150f;
+            Widgets.BeginScrollView(inRect, ref this.scrollPosition, new Rect(0f, 0f, rect.width, contentHeight), true);
+            Listing_CashRegister options = new Listing_CashRegister();
+            options.Begin(rect);
+            options.GapLine();
+            Text.Font = GameFont.Medium;
+            Text.Font = GameFont.Small;
+            options.CustomCheckboxLabeled("InactiveIfEveryoneIsSleeping".Translate(), ref inactiveIfEveryoneIsSleeping, "InactiveIfEveryoneIsSleepingDesc".Translate());
+            options.GapLine();
+            options.End();
+            Widgets.EndScrollView();
+        }
 
 		// Make sure that it still works when referenced settings are null!
 		//private static SettingHandle.ValueIsValid WorkSkillLimits { get { return AtLeast(() => disableLimits?.Value != false ? 0 : 6); } }
