@@ -19,7 +19,8 @@
 		</li>
 	</modDependencies>
 	<loadAfter>
-	</loadAfter>
+		<li>brrainz.harmony</li>
+	</loadAfter>	
 	<incompatibleWith>
 	</incompatibleWith>
 	<description>Build a cash register to control the settings of your restaurant. Doesn't do anything on its own.
