@@ -77,6 +77,7 @@ public class Building_CashRegister : Building_TableTop, IHaulDestination, IThing
     public bool StorageTabVisible => false;
 
     public bool Accepts(Thing t) => t.def == ThingDefOf.Silver;
+    public bool HaulDestinationEnabled => true;
 
     public void Notify_SettingsChanged()
     {

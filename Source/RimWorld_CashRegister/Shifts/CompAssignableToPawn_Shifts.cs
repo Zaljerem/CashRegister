@@ -19,7 +19,7 @@ namespace CashRegister.Shifts
 			// Don't run original code
 		}
 
-		public override void PostDeSpawn(Map map)
+		public override void PostDeSpawn(Map map, DestroyMode mode = DestroyMode.Vanish)
 		{
 			//for (int index = assignedPawns.Count - 1; index >= 0; --index)
 			//	TryUnassignPawn(assignedPawns[index], false);

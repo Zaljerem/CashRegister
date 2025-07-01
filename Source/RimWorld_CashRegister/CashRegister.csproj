@@ -7,7 +7,7 @@
     <TargetFramework>net472</TargetFramework>
     <LangVersion>latest</LangVersion>
     <PlatformTarget>x64</PlatformTarget>
-    <OutputPath>..\..\1.5\Assemblies\</OutputPath>
+    <OutputPath>..\..\1.6\Assemblies\</OutputPath>
     <Optimize>true</Optimize>
     <DebugType>none</DebugType>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
@@ -28,7 +28,7 @@
   
   <!-- <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" /> -->
   <PropertyGroup>
-    <PostBuildEvent>xcopy /y "$(TargetDir)*.dll" "$(TargetDir)..\..\..\Gastronomy\1.5\Assemblies\"</PostBuildEvent>
+    <PostBuildEvent>xcopy /y "$(TargetDir)*.dll" "$(TargetDir)..\..\..\Gastronomy\1.6\Assemblies\"</PostBuildEvent>
   </PropertyGroup>
 	
   <ItemGroup>
