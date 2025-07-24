@@ -20,59 +20,77 @@ namespace CashRegister.Shifts
 
 		public override bool IsVisible => true;
 
-		public override void FillTab()
-		{
-			const int WidthLabel = 300;
-			const int MinHeight = 30;
+        private Vector2 scrollPosition = Vector2.zero;
 
-			var rect = new Rect(0, 0, size.x, size.y).ContractedBy(10);
-			var rectHeader = new Rect(rect) {height = Text.LineHeight};
+        public override void FillTab()
+        {
+            const int WidthLabel = 300;
+            const int MinHeight = 30;
+            const float ScrollMargin = 10f;
 
-			rect.yMin += Text.LineHeight;
-			//rect.height -= Text.LineHeight;
+            var outRect = new Rect(0f, 0f, size.x, size.y).ContractedBy(ScrollMargin);
+            var viewRect = outRect;
+            float contentHeight = 0f;
 
-			var rectAdd = new Rect(rect) {height = MinHeight, width = MinHeight};
-			var rectLabel = new Rect(rect) {width = WidthLabel};
-			var rectTable = new Rect(rect);
-			
-			rectLabel.x = rectAdd.xMax;
-			//rectTable.width -= WidthLabel + rectAdd.width;
-			rectTable.xMin = rectHeader.xMin = rectLabel.xMax;
-			//rectHeader.width = rectTable.width;
+            // Calculate the height dynamically
+            viewRect.height = 10000f; // Large enough for any number of entries; gets clipped by outRect
 
-			TimetableUtility.DoHeader(rectHeader);
+            Widgets.BeginScrollView(outRect, ref scrollPosition, viewRect);
 
-			lastHeight = 0;
-			foreach (var shift in Register.shifts)
-			{
-				float height = MinHeight;
-				if (shift != null)
-				{
-					DrawShift(rectTable, rectLabel, shift, ref height);
-				}
+            var rect = new Rect(0f, 0f, viewRect.width, viewRect.height);
+            var rectHeader = new Rect(rect) { height = Text.LineHeight };
+            rect.yMin += Text.LineHeight;
 
-				if (Widgets.ButtonText(rectAdd, "TabRegisterShiftsRemove".Translate()))
-				{
-					Register.shifts.Remove(shift);
-					break;
-				}
+            var rectAdd = new Rect(rect) { height = MinHeight, width = MinHeight };
+            var rectLabel = new Rect(rect) { width = WidthLabel };
+            var rectTable = new Rect(rect);
+            rectLabel.x = rectAdd.xMax;
+            rectTable.xMin = rectLabel.xMax;
+            rectHeader.width = rectTable.width;
 
-				rectTable.y += height;
-				rectLabel.y += height;
-				rectAdd.y += height;
-				lastHeight += height;
-			}
+            // Draw header
+            TimetableUtility.DoHeader(rectHeader);
 
-			if (Register.shifts.Count < 5)
-			{
-				DrawAddButton(rectAdd);
-				lastHeight += MinHeight;
-			}
+            float currentY = rect.yMin;
 
-			size.y = Mathf.Max(lastHeight, MinDialogHeight);
-		}
+            for (int i = 0; i < Register.shifts.Count; i++)
+            {
+                var shift = Register.shifts[i];
+                float height = MinHeight;
 
-		private void DrawShift(Rect rectTable, Rect rectLabel, Shift shift, ref float height)
+                var labelRect = new Rect(rectLabel) { y = currentY };
+                var tableRect = new Rect(rectTable) { y = currentY };
+                var removeRect = new Rect(rectAdd) { y = currentY };
+
+                if (shift != null)
+                {
+                    DrawShift(tableRect, labelRect, shift, ref height);
+                }
+
+                if (Widgets.ButtonText(removeRect, "TabRegisterShiftsRemove".Translate()))
+                {
+                    Register.shifts.RemoveAt(i);
+                    break; // List modified — exit
+                }
+
+                currentY += height;
+                contentHeight += height;
+            }
+
+            if (Register.shifts.Count < 50) // Arbitrary cap, or remove entirely
+            {
+                var addRect = new Rect(rectAdd) { y = currentY };
+                DrawAddButton(addRect);
+                contentHeight += MinHeight;
+            }
+
+            Widgets.EndScrollView();
+
+            size.y = Mathf.Max(contentHeight + ScrollMargin * 2, MinDialogHeight);
+        }
+
+
+        private void DrawShift(Rect rectTable, Rect rectLabel, Shift shift, ref float height)
 		{
 			var names = shift.assigned.Any() ? shift.assigned.Select(pawn => GetPawnName(shift, pawn)).ToCommaList() : (string)"TabRegisterShiftsEmpty".Translate();
 			var rectNames = new Rect(rectLabel) {width = rectLabel.width * 0.6f};

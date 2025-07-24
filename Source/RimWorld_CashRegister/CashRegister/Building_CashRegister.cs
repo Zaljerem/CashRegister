@@ -33,6 +33,8 @@ public class Building_CashRegister : Building_TableTop, IHaulDestination, IThing
     private StorageSettings storageSettings;
     protected ITab_Register[] tabs;
 
+    bool IHaulDestination.HaulDestinationEnabled => true; //added for 1.6, test, may need to be false?
+
     public Building_CashRegister()
     {
         innerContainer = new ThingOwner<Thing>(this, false);
@@ -77,7 +79,6 @@ public class Building_CashRegister : Building_TableTop, IHaulDestination, IThing
     public bool StorageTabVisible => false;
 
     public bool Accepts(Thing t) => t.def == ThingDefOf.Silver;
-    public bool HaulDestinationEnabled => true;
 
     public void Notify_SettingsChanged()
     {

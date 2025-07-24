@@ -32,7 +32,7 @@ namespace CashRegister
 		{
 			if (HaulAIUtility.PawnCanAutomaticallyHaulFast(pawn, Silver, false))
 			{
-				var haulJob = HaulAIUtility.HaulToStorageJob(pawn, Silver, false);
+				var haulJob = HaulAIUtility.HaulToStorageJob(pawn, Silver, false); //added false
 				if (haulJob != null)
 				{
 					pawn.jobs.StartJob(haulJob, JobCondition.Succeeded);

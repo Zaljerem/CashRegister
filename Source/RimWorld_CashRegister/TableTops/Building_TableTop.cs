@@ -9,8 +9,9 @@ namespace CashRegister.TableTops
     public class Building_TableTop : Building
     {
         public static UnityEventBuildingDespawned OnBuildingDespawned { get; } = new UnityEventBuildingDespawned();
-        public Building Table { get; private set; } // Can't be saved with ExposeData, the reference gets lost
-
+        //public Building Table { get; private set; } // Can't be saved with ExposeData, the reference gets lost
+        public Building Table;
+        //added - let's try it now, Buildings are IExposable via Thing
         public override void SpawnSetup(Map map, bool respawningAfterLoad)
         {
             base.SpawnSetup(map, respawningAfterLoad);
@@ -47,5 +48,14 @@ namespace CashRegister.TableTops
                 this.Uninstall();
             }
         }
+
+        public override void ExposeData()
+        {
+            base.ExposeData();
+            //Let's try scribing it, Buildings should be IExposable
+            Scribe_References.Look<Building>(ref Table, "Table");
+        }
+
+
     }
 }
